@@ -10,8 +10,8 @@ starGrob <- function(x=0.5, y=0.5,
                                lwd=0.5),
                      position.units = "npc", 
                      size.units="mm", ...){
-    if (! all(starshape %in% seq_len(32))){
-        stop("the starshape should be one of 1 to 32 !")
+    if (! all(starshape %in% seq_len(length(starshape_ntab)))){
+        stop("the starshape should be one of 1 to 33 !")
     }
     N <- length(x)
     stopifnot(length(y)==N)
@@ -49,6 +49,7 @@ starGrob <- function(x=0.5, y=0.5,
 deg2rad <- function(x){x * pi / 180}
 rad2deg <- function(x){x * 180 / pi}
 
+my_add_num=3
 # index of starshape = numbers of edge (n)
 starshape_ntab <- c(5, 6, 7, 8,
                     5, 6, 7, 8,
@@ -58,8 +59,9 @@ starshape_ntab <- c(5, 6, 7, 8,
                     0, 3, 3, 6,
                     50, 3, 0, 4,
                     0, 0, 50, 50)
+starshape_ntab<-c(starshape_ntab,rep(4,my_add_num))
 
-names(starshape_ntab) <- seq_len(32)
+names(starshape_ntab) <- seq_len(length(starshape_ntab))
 
 match_n <- function(starshape){
     n <- starshape_ntab[match(starshape,names(starshape_ntab))]
@@ -67,8 +69,9 @@ match_n <- function(starshape){
 }
 
 # index of starshape = aspect ratio (ar) 
-starshape_artab <- c(rep(1, 9), 0.5, 1, 0.5, rep(1,12),0.5, 0.18, 1, 1, 1, 1,1,1)
-names(starshape_artab) <- seq_len(32)
+starshape_artab <- c(rep(1, 9), 0.5, 1, 0.5, rep(1,12),0.5, 0.18, 1, 1, 1, 1,1,1,1)
+starshape_artab<-c(starshape_artab,rep(1,my_add_num))
+names(starshape_artab) <- seq_len(length(starshape_artab))
 
 match_ar <- function(starshape){
     ar <- starshape_artab[match(starshape,names(starshape_artab))]
@@ -154,6 +157,64 @@ build_polygenxy_id.lengths <- function(starshape, phase){
         endxy2 <- matrix(c(max(plxy[,1]), max(plxy[,2]), min(plxy[,1]), max(plxy[,2])), ncol=2, byrow=T)
         plxy <- plxy[seq(nrow(plxy)/2),]
         plxy <- rbind(plxy, endxy1, endxy2)
+    }else if (starshape == 33){
+        x1<-seq(-1,1,by=0.05)
+        y1<-sqrt(1-x1^2)
+        y2<-seq(-1,1,by=0.05)
+        x2<-sqrt(1-y2^2)
+        
+        data.frame(x=c(x1,x2+1,-x1,-x2-1),
+                   y=c(y1+1,-y2,-y1-1,y2)) %>% as.matrix() -> plxy
+    }else if (starshape == 34){
+        x1<-seq(-1,1,by=0.5)
+        y1<-sqrt(1-x1^2)
+        y2<-seq(-1,1,by=0.5)
+        x2<-sqrt(1-y2^2)
+        
+        data.frame(x=c(x1,x2+1,-x1,-x2-1),
+                   y=c(y1,-y2,-y1-1,y2)) %>% as.matrix() -> plxy
+    }else if (starshape == 35){
+        coordinates <- data.frame(
+                                  x = c(0.536,0.706,0.855,0.958,1,0.975,
+                                        0.885,0.746,0.579,0.409,0.26,0.153,
+                                        0.1,0.103,0.155,0.242,0.343,0.437,
+                                        0.506,0.537,0.527,0.476,0.396,
+                                        0.301,0.206,0.123,0.062,0.024,0.005,
+                                        -0.003,-0.013,-0.036,-0.079,-0.146,
+                                        -0.233,-0.33,-0.423,-0.496,-0.537,
+                                        -0.538,-0.496,-0.419,-0.321,-0.222,
+                                        -0.142,-0.101,-0.112,-0.179,-0.298,
+                                        -0.455,-0.627,-0.789,-0.917,-0.991,-1,
+                                        -0.942,-0.825,-0.669,-0.497,-0.335,
+                                        -0.205,-0.123,-0.099,-0.128,-0.199,
+                                        -0.296,-0.396,-0.48,-0.531,-0.542,
+                                        -0.51,-0.443,-0.354,-0.257,-0.166,
+                                        -0.094,-0.044,-0.017,-0.005,0.003,
+                                        0.018,0.05,0.106,0.183,0.277,0.373,
+                                        0.459,0.517,0.539,0.518,0.457,0.368,
+                                        0.266,0.174,0.112,0.095,0.134,
+                                        0.229,0.369,0.536),
+                                  y = c(-0.164,-0.162,-0.132,-0.078,
+                                        -0.009,0.062,0.121,0.158,0.167,0.15,
+                                        0.117,0.083,0.064,0.076,0.13,0.23,
+                                        0.369,0.534,0.702,0.851,0.956,1,0.976,
+                                        0.885,0.742,0.57,0.396,0.25,0.155,
+                                        0.128,0.173,0.282,0.438,0.614,
+                                        0.782,0.913,0.988,0.995,0.935,0.817,
+                                        0.661,0.492,0.331,0.201,0.112,0.069,
+                                        0.066,0.091,0.126,0.156,0.167,
+                                        0.151,0.108,0.045,-0.027,-0.094,-0.142,
+                                        -0.165,-0.161,-0.135,-0.099,-0.07,
+                                        -0.065,-0.097,-0.174,-0.295,-0.449,
+                                        -0.619,-0.78,-0.909,-0.986,-0.996,
+                                        -0.938,-0.818,-0.658,-0.481,-0.317,
+                                        -0.194,-0.132,-0.141,-0.22,-0.356,
+                                        -0.525,-0.7,-0.853,-0.958,-1,-0.972,
+                                        -0.881,-0.742,-0.576,-0.408,-0.261,
+                                        -0.15,-0.085,-0.063,-0.075,-0.108,
+                                        -0.143,-0.164)
+                       )
+        as.matrix(coordinates) -> plxy
     }else{
         plxy <- 0.8*polygon_regular(n=n, phase=phase)
     }
